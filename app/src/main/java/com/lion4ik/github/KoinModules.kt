@@ -10,5 +10,6 @@ import org.koin.dsl.module
 val baseModule = module{
     single { androidContext().getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager }
     single { DownloadHelper(get()) }
-    viewModel { MainViewModel(get()) }
+    single { DownloadStorage(androidContext().getSharedPreferences("download_prefs", Context.MODE_PRIVATE)) }
+    viewModel { MainViewModel(get(), get()) }
 }

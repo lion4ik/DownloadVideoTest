@@ -6,7 +6,7 @@ import android.os.Environment
 
 class DownloadHelper(private val downloadManager: DownloadManager) {
 
-    fun downloadFile(url: String) {
+    fun downloadFile(url: String): Long {
         val uri = Uri.parse(url)
         val request =
             DownloadManager.Request(uri)
@@ -19,6 +19,9 @@ class DownloadHelper(private val downloadManager: DownloadManager) {
                 .setAllowedOverMetered(true)
                 .setAllowedOverRoaming(true)
 
-        downloadManager.enqueue(request)
+        return downloadManager.enqueue(request)
     }
+
+    fun getDownload(downloadId: Long): Uri? =
+        downloadManager.getUriForDownloadedFile(downloadId)
 }
