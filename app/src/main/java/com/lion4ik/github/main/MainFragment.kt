@@ -2,17 +2,10 @@ package com.lion4ik.github.main
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.DownloadManager
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -31,26 +24,8 @@ class MainFragment : Fragment(R.layout.main_fragment) {
 
     private val mainViewModel: MainViewModel by viewModel()
 
-    private val downloadReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            val referenceId =
-                intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
-            Log.d("DEBUG", "download id = $referenceId")
-        }
-
-    }
-
-    override fun onStart() {
-        super.onStart()
-        context?.registerReceiver(
-            downloadReceiver,
-            IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
-        )
-    }
-
     override fun onStop() {
         super.onStop()
-        context?.unregisterReceiver(downloadReceiver)
         videoView.stopPlayback()
     }
 
@@ -97,7 +72,11 @@ class MainFragment : Fragment(R.layout.main_fragment) {
             downloadFileWithPermissionCheck(editUrl.text.toString())
         }
         videoView.setOnErrorListener { mp, what, extra ->
-            Toast.makeText(context, "An error occurred while tried to play video", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                context,
+                "An error occurred while tried to play video",
+                Toast.LENGTH_SHORT
+            ).show()
             videoView.suspend()
             true
         }

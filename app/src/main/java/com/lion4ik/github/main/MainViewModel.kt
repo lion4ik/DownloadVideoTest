@@ -1,15 +1,18 @@
 package com.lion4ik.github.main
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.lion4ik.github.download.DownloadErrorHandler
 import com.lion4ik.github.download.DownloadHelper
 import com.lion4ik.github.download.DownloadStorage
 
 class MainViewModel(
     private val downloadHelper: DownloadHelper,
-    private val downloadStorage: DownloadStorage
+    private val downloadStorage: DownloadStorage,
+    private val downloadErrorHandler: DownloadErrorHandler
 ) : ViewModel() {
 
     private val videoUrlMutable: MutableLiveData<String> = MutableLiveData()
@@ -18,13 +21,30 @@ class MainViewModel(
     private val videoUriMutable: MutableLiveData<Uri> = MutableLiveData()
     val videoUri: LiveData<Uri> = videoUriMutable
 
+    init {
+        downloadErrorHandler.subscribeOnDownload(object : DownloadErrorHandler.DownloadCallback {
+
+            override fun onDownloadCompleted(downloadResult: DownloadErrorHandler.DownloadResult) {
+                Log.d("DEBUG", "download id = ${downloadResult.downloadId}")
+            }
+        })
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        downloadErrorHandler.unsubscribeFromDownload()
+    }
+
     fun onVideoUrlChanged(videoUrl: String) {
         videoUrlMutable.value = videoUrl
     }
 
     fun onDownloadClicked(url: String) {
-        val downloadId = downloadHelper.downloadFile(url)
-        downloadStorage.putDownloadIfAbsent(url, downloadId)
+        // only http or https urls are valid for downloading
+        if (url.startsWith("http") || url.startsWith("https")) {
+            val downloadId = downloadHelper.downloadFile(url)
+            downloadStorage.putDownloadIfAbsent(url, downloadId)
+        }
     }
 
     fun onPlayPauseClicked(url: String) {
