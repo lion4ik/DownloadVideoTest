@@ -100,7 +100,6 @@ class MainFragment : Fragment(R.layout.main_fragment) {
                 videoView.pause()
             } else {
                 if (videoView.uri != it) {
-//                    videoView.stopPlayback()
                     videoView.suspend()
                     videoView.setVideoURI(it)
                 } else {
