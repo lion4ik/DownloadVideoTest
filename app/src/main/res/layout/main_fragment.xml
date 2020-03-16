@@ -5,38 +5,71 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.MainFragment">
+    tools:context=".main.MainFragment">
 
-    <VideoView
+    <com.lion4ik.github.widget.CustomVideoView
         android:id="@+id/videoView"
         android:layout_width="0dp"
-        android:layout_height="400dp"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_height="300dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/editUrl"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/videoView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/videoView" />
 
     <Button
         android:id="@+id/btnPlay"
-        android:text="Play/Pause"
-        app:layout_constraintTop_toBottomOf="@id/editUrl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"/>
+        android:text="Play/Pause"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editUrl" />
 
     <Button
         android:id="@+id/btnDownload"
-        android:text="Download"
-        app:layout_constraintTop_toBottomOf="@id/editUrl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        android:text="Download"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editUrl" />
+
+    <Button
+        android:id="@+id/btnUrl1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Url 1"
+        app:layout_constraintEnd_toStartOf="@id/btnUrl2"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnDownload" />
+
+    <Button
+        android:id="@+id/btnUrl2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Url 2"
+        app:layout_constraintEnd_toEndOf="@id/btnUrl3"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="@id/btnUrl1"
+        app:layout_constraintTop_toBottomOf="@id/btnDownload" />
+
+    <Button
+        android:id="@+id/btnUrl3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Url 3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toEndOf="@+id/btnUrl2"
+        app:layout_constraintTop_toBottomOf="@id/btnDownload" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

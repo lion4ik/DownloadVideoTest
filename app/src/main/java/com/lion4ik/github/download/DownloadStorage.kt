@@ -1,8 +1,14 @@
-package com.lion4ik.github
+package com.lion4ik.github.download
 
 import android.content.SharedPreferences
 
 class DownloadStorage(private val sharedPreferences: SharedPreferences) {
+
+    fun putDownloadIfAbsent(url: String, id: Long) {
+        if (!sharedPreferences.contains(url)) {
+            putDownload(url, id)
+        }
+    }
 
     fun putDownload(url: String, id: Long) =
         sharedPreferences.edit().putLong(url, id).apply()

@@ -1,11 +1,11 @@
-package com.lion4ik.github.ui.main
+package com.lion4ik.github.main
 
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.lion4ik.github.DownloadHelper
-import com.lion4ik.github.DownloadStorage
+import com.lion4ik.github.download.DownloadHelper
+import com.lion4ik.github.download.DownloadStorage
 
 class MainViewModel(
     private val downloadHelper: DownloadHelper,
@@ -24,7 +24,7 @@ class MainViewModel(
 
     fun onDownloadClicked(url: String) {
         val downloadId = downloadHelper.downloadFile(url)
-        downloadStorage.putDownload(url, downloadId)
+        downloadStorage.putDownloadIfAbsent(url, downloadId)
     }
 
     fun onPlayPauseClicked(url: String) {

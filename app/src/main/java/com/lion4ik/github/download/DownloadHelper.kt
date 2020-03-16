@@ -1,4 +1,4 @@
-package com.lion4ik.github
+package com.lion4ik.github.download
 
 import android.app.DownloadManager
 import android.net.Uri
