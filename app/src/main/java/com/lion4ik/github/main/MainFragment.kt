@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import com.lion4ik.github.R
@@ -72,11 +73,7 @@ class MainFragment : Fragment(R.layout.main_fragment) {
             downloadFileWithPermissionCheck(editUrl.text.toString())
         }
         videoView.setOnErrorListener { mp, what, extra ->
-            Toast.makeText(
-                context,
-                R.string.error_play_video,
-                Toast.LENGTH_SHORT
-            ).show()
+            showToast(R.string.error_play_video)
             videoView.suspend()
             true
         }
@@ -110,8 +107,11 @@ class MainFragment : Fragment(R.layout.main_fragment) {
         }
         mainViewModel.downloadResult.nonNullObserve(viewLifecycleOwner) {
             if (it.status != DownloadManager.STATUS_SUCCESSFUL) {
-                Toast.makeText(context, R.string.error_download_video, Toast.LENGTH_SHORT).show()
+                showToast(R.string.error_download_video)
             }
+        }
+        mainViewModel.error.nonNullObserve(viewLifecycleOwner) {
+            showToast(it)
         }
     }
 
@@ -119,6 +119,10 @@ class MainFragment : Fragment(R.layout.main_fragment) {
         if (videoView.isPlaying) {
             videoView.stopPlayback()
         }
+    }
+
+    private fun showToast(@StringRes msgResId: Int) {
+        Toast.makeText(context, msgResId, Toast.LENGTH_SHORT).show()
     }
 
     @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
