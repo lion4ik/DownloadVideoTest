@@ -4,7 +4,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 
-fun <T> LiveData<T>.nonNullObserve(lifecycleOwner: LifecycleOwner, observer: (t: T) -> Unit) {
+inline fun <T> LiveData<T>.nonNullObserve(lifecycleOwner: LifecycleOwner, crossinline observer: (t: T) -> Unit) {
     observe(lifecycleOwner, Observer {
         it?.let(observer)
     })

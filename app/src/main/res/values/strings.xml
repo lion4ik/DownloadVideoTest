@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">DownloadVideoTest</string>
+    <string name="error_download_video">An error occurred while downloading video</string>
+    <string name="error_play_video">An error occurred while tried to play video</string>
 </resources>

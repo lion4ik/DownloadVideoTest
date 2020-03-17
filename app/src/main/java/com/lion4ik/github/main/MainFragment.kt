@@ -2,12 +2,12 @@ package com.lion4ik.github.main
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.DownloadManager
 import android.os.Build
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import com.lion4ik.github.R
 import com.lion4ik.github.util.nonNullObserve
@@ -21,6 +21,12 @@ import permissions.dispatcher.RuntimePermissions
 
 @RuntimePermissions
 class MainFragment : Fragment(R.layout.main_fragment) {
+
+    companion object{
+        private const val URL1 = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
+        private const val URL2 = "https://archive.org/download/ksnn_compilation_master_the_internet/ksnn_compilation_master_the_internet_512kb.mp4"
+        private const val URL3 = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4"
+    }
 
     private val mainViewModel: MainViewModel by viewModel()
 
@@ -52,18 +58,9 @@ class MainFragment : Fragment(R.layout.main_fragment) {
 
     @SuppressLint("SetTextI18n")
     private fun initViews() {
-        editUrl.setText("https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4")
-        editUrl.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(editable: Editable) {
-            }
-
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(newText: CharSequence, p1: Int, p2: Int, p3: Int) {
-                mainViewModel.onVideoUrlChanged(newText.toString())
-            }
-
+        editUrl.setText(URL1)
+        editUrl.addTextChangedListener(onTextChanged = { newText, _, _, _ ->
+            mainViewModel.onVideoUrlChanged(newText.toString())
         })
         btnPlay.setOnClickListener {
             mainViewModel.onPlayPauseClicked(editUrl.text.toString())
@@ -74,7 +71,7 @@ class MainFragment : Fragment(R.layout.main_fragment) {
         videoView.setOnErrorListener { mp, what, extra ->
             Toast.makeText(
                 context,
-                "An error occurred while tried to play video",
+                R.string.error_play_video,
                 Toast.LENGTH_SHORT
             ).show()
             videoView.suspend()
@@ -84,31 +81,34 @@ class MainFragment : Fragment(R.layout.main_fragment) {
             videoView.start()
         }
         btnUrl1.setOnClickListener {
-            editUrl.setText("https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4")
+            editUrl.setText(URL1)
         }
         btnUrl2.setOnClickListener {
-            editUrl.setText("https://archive.org/download/ksnn_compilation_master_the_internet/ksnn_compilation_master_the_internet_512kb.mp4")
+            editUrl.setText(URL2)
         }
         btnUrl3.setOnClickListener {
-            editUrl.setText("https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4")
+            editUrl.setText(URL3)
         }
     }
 
     private fun observeData() {
         mainViewModel.videoUri.nonNullObserve(viewLifecycleOwner) {
-            if (videoView.isPlaying) {
-                videoView.pause()
-            } else {
-                if (videoView.uri != it) {
+            when {
+                videoView.isPlaying -> videoView.pause()
+                videoView.uri != it -> {
                     videoView.suspend()
                     videoView.setVideoURI(it)
-                } else {
-                    videoView.start()
                 }
+                else -> videoView.start()
             }
         }
         mainViewModel.videoUrl.nonNullObserve(viewLifecycleOwner) {
             stopPlayer()
+        }
+        mainViewModel.downloadResult.nonNullObserve(viewLifecycleOwner) {
+            if (it.status != DownloadManager.STATUS_SUCCESSFUL) {
+                Toast.makeText(context, R.string.error_download_video, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

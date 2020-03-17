@@ -21,11 +21,15 @@ class MainViewModel(
     private val videoUriMutable: MutableLiveData<Uri> = MutableLiveData()
     val videoUri: LiveData<Uri> = videoUriMutable
 
+    private val downloadResultMutable: MutableLiveData<DownloadErrorHandler.DownloadResult> = MutableLiveData()
+    val downloadResult: LiveData<DownloadErrorHandler.DownloadResult> = downloadResultMutable
+
     init {
         downloadErrorHandler.subscribeOnDownload(object : DownloadErrorHandler.DownloadCallback {
 
             override fun onDownloadCompleted(downloadResult: DownloadErrorHandler.DownloadResult) {
                 Log.d("DEBUG", "download id = ${downloadResult.downloadId}")
+                downloadResultMutable.value = downloadResult
             }
         })
     }
@@ -41,7 +45,7 @@ class MainViewModel(
 
     fun onDownloadClicked(url: String) {
         // only http or https urls are valid for downloading
-        if (url.startsWith("http") || url.startsWith("https")) {
+        if (url.startsWith("http://") || url.startsWith("https://")) {
             val downloadId = downloadHelper.downloadFile(url)
             downloadStorage.putDownloadIfAbsent(url, downloadId)
         }
@@ -50,13 +54,11 @@ class MainViewModel(
     fun onPlayPauseClicked(url: String) {
         if (downloadStorage.hasDownload(url)) {
             val downloadId = downloadStorage.getDownload(url)
-            with(downloadHelper.getDownload(downloadId)) {
-                if (this == null) {
-                    downloadStorage.removeDownload(url)
-                    videoUriMutable.value = Uri.parse(url)
-                } else {
-                    videoUriMutable.value = this
-                }
+            downloadHelper.getDownload(downloadId)?.let {
+                videoUriMutable.value = it
+            } ?: run {
+                downloadStorage.removeDownload(url)
+                videoUriMutable.value = Uri.parse(url)
             }
         } else {
             videoUriMutable.value = Uri.parse(url)

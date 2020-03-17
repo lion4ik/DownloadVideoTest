@@ -11,6 +11,21 @@ class DownloadBroadcastReceiver(private val downloadManager: DownloadManager) :
 
     var downloadCallback: DownloadErrorHandler.DownloadCallback? = null
 
+    private fun resultFromCursor(
+        cursor: Cursor,
+        downloadId: Long
+    ): DownloadErrorHandler.DownloadResult = run {
+        val columnStatus: Int = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)
+        val status = cursor.getInt(columnStatus)
+        val columnReason = cursor.getColumnIndex(DownloadManager.COLUMN_REASON)
+        val reason = cursor.getInt(columnReason)
+        DownloadErrorHandler.DownloadResult(
+            status,
+            reason,
+            downloadId
+        )
+    }
+
     override fun onReceive(context: Context, intent: Intent) {
         if (DownloadManager.ACTION_DOWNLOAD_COMPLETE == intent.action) {
             val downloadId = intent.getLongExtra(
@@ -20,17 +35,7 @@ class DownloadBroadcastReceiver(private val downloadManager: DownloadManager) :
             val cursor: Cursor = downloadManager.query(query)
             cursor.use {
                 if (it.moveToFirst()) {
-                    val columnStatus: Int = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)
-                    val status = cursor.getInt(columnStatus)
-                    val columnReason = cursor.getColumnIndex(DownloadManager.COLUMN_REASON)
-                    val reason = cursor.getInt(columnReason)
-                    downloadCallback?.onDownloadCompleted(
-                        DownloadErrorHandler.DownloadResult(
-                            status,
-                            reason,
-                            downloadId
-                        )
-                    )
+                    downloadCallback?.onDownloadCompleted(resultFromCursor(cursor, downloadId))
                 }
             }
         }
