@@ -34,9 +34,13 @@
     private val downloadErrorHandler: DownloadErrorHandler
 ```
 в конструктор
+
 2. Добавляем подписчиков на `videoUri` livedata
+
 3. Указываем моку downloadStorage при вызове `hasDownload(url)` возвращать false 
+
 4. Проверяем что подписчик на `videoUri` livedata получил верный uri, соответствующий url переданный в метод `MainViewModel`
+
 5. Проверяем что `hasDownload(url)` у `downloadStorage` был вызван и никакие другие методы вызваны не были.
 
 Аналогичным образом можно протестировать и другие методы/случаи вьюмодели.
