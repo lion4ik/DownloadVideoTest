@@ -22,10 +22,13 @@ import permissions.dispatcher.RuntimePermissions
 @RuntimePermissions
 class MainFragment : Fragment(R.layout.main_fragment) {
 
-    companion object{
-        private const val URL1 = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
-        private const val URL2 = "https://archive.org/download/ksnn_compilation_master_the_internet/ksnn_compilation_master_the_internet_512kb.mp4"
-        private const val URL3 = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4"
+    companion object {
+        private const val URL1 =
+            "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
+        private const val URL2 =
+            "https://archive.org/download/ksnn_compilation_master_the_internet/ksnn_compilation_master_the_internet_512kb.mp4"
+        private const val URL3 =
+            "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4"
     }
 
     private val mainViewModel: MainViewModel by viewModel()
