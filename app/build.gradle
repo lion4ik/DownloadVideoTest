@@ -49,7 +49,6 @@ dependencies {
     //Arch components
     implementation "androidx.lifecycle:lifecycle-extensions:$arch_components_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$arch_components_version"
-    testImplementation 'junit:junit:4.12'
 
     //Permission dispatcher
     implementation "org.permissionsdispatcher:permissionsdispatcher:$permission_dispatcher_version"
