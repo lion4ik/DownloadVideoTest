@@ -25,3 +25,22 @@
 
 # Тестирование
 Основная часть бизнес логики находится в классах из пакета `download`, но также и в `MainViewModel`. Как вьюмодель, так и остальные классы бизнес логики возможно покрыть тестами, замокав зависимости, передаваемые в конструктор.
+
+Например, `MainViewModel#onPlayPauseClicked(url: String)` можно протестировать следующим образом:
+1. передаем моки зависимостей 
+```kotlin
+    private val downloadHelper: DownloadHelper,
+    private val downloadStorage: DownloadStorage,
+    private val downloadErrorHandler: DownloadErrorHandler
+```
+в конструктор
+
+2. Добавляем подписчиков на `videoUri` livedata
+
+3. Указываем моку downloadStorage при вызове `hasDownload(url)` возвращать false 
+
+4. Проверяем что подписчик на `videoUri` livedata получил верный uri, соответствующий url переданный в метод `MainViewModel`
+
+5. Проверяем что `hasDownload(url)` у `downloadStorage` был вызван и никакие другие методы вызваны не были.
+
+Аналогичным образом можно протестировать и другие методы/случаи вьюмодели.
